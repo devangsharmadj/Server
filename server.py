@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, abort
+from flask import Flask, render_template, request
 import smtplib
 from email.message import EmailMessage
 import csv
@@ -44,7 +44,6 @@ def emailing(data):
         smtp.starttls()
         smtp.login('zerotomasterydj@gmail.com', '55343')
         smtp.send_message(email)
-        print('All done')
 
 
 def writing(data):
