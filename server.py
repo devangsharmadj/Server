@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for, abort
 import smtplib
 from email.message import EmailMessage
+import csv
 
 app = Flask(__name__)
 
@@ -15,19 +16,42 @@ def works(page_name='index.html'):
     return render_template(page_name)
 
 
+@app.route('/thanks.html')
+def thanks(data):
+    #emailing(data)
+    writing(data)
+    return render_template('thanks.html', name=data)
+
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
         data = request.form.to_dict()
-        email = EmailMessage()
-        email['from'] = data['name']
-        email['subject'] = data['subject']
-        email['to'] = 'devangsharmadj@gmail.com'
-        email.set_content(data['message'])
-        with smtplib.SMTP(host='smtp.gmail.com', port=587) as smtp:
-            smtp.ehlo()
-            smtp.starttls()
-
-            smtp.send_message(email, data['email'])
+        return thanks(data)
+    else:
+        return 'Oops, something went wrong!\nTry again later'
 
 
+def emailing(data):
+    email = EmailMessage()
+    email['from'] = data['name']
+    email['subject'] = f"{data['subject']}\n\n Email:{data['email']}"
+    email['to'] = 'devangsharmadj@gmail.com'
+    email.set_content(data['message'])
+
+    with smtplib.SMTP(host='smtp.gmail.com', port=587) as smtp:
+        smtp.ehlo()
+        smtp.starttls()
+        smtp.login('zerotomasterydj@gmail.com', '55343')
+        smtp.send_message(email)
+        print('All done')
+
+
+def writing(data):
+    name = data['name']
+    subject = data['subject']
+    message = data['message']
+    email = data['email']
+    with open('database.csv', 'a') as db:
+        writer = csv.writer(db)
+        writer.writerow([name, email, subject, message])
