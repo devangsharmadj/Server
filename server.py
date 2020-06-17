@@ -18,7 +18,7 @@ def works(page_name='index.html'):
 
 @app.route('/thanks.html')
 def thanks(data):
-    # #emailing(data)
+    emailing(data)
     writing(data)
     return render_template('thanks.html', name=data)
 
