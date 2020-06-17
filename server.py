@@ -18,7 +18,7 @@ def works(page_name='index.html'):
 
 @app.route('/thanks.html')
 def thanks(data):
-    #emailing(data)
+    # #emailing(data)
     writing(data)
     return render_template('thanks.html', name=data)
 
@@ -35,14 +35,15 @@ def login():
 def emailing(data):
     email = EmailMessage()
     email['from'] = data['name']
-    email['subject'] = f"{data['subject']}\n\n Email:{data['email']}"
+    sub = f"{data['message']}\n\nEmail: {data['email']}"
+    email['subject'] = data['subject']
     email['to'] = 'devangsharmadj@gmail.com'
-    email.set_content(data['message'])
+    email.set_content(sub)
 
     with smtplib.SMTP(host='smtp.gmail.com', port=587) as smtp:
         smtp.ehlo()
         smtp.starttls()
-        smtp.login('zerotomasterydj@gmail.com', '55343')
+        smtp.login('zerotomasterydj@gmail.com', 'NDDGisgr8!')
         smtp.send_message(email)
 
 
